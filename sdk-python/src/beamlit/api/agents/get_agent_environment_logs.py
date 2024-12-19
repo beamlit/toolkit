@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import httpx
 
@@ -22,7 +22,7 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[List["ResourceLog"]]:
+) -> Optional[list["ResourceLog"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
@@ -40,7 +40,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[List["ResourceLog"]]:
+) -> Response[list["ResourceLog"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,7 +53,7 @@ def sync_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ResourceLog"]]:
+) -> Response[list["ResourceLog"]]:
     """
     Args:
         agent_name (str):
@@ -63,7 +63,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ResourceLog']]
+        Response[list['ResourceLog']]
     """
 
     kwargs = _get_kwargs(
@@ -81,7 +81,7 @@ def sync(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ResourceLog"]]:
+) -> Optional[list["ResourceLog"]]:
     """
     Args:
         agent_name (str):
@@ -91,7 +91,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ResourceLog']
+        list['ResourceLog']
     """
 
     return sync_detailed(
@@ -104,7 +104,7 @@ async def asyncio_detailed(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Response[List["ResourceLog"]]:
+) -> Response[list["ResourceLog"]]:
     """
     Args:
         agent_name (str):
@@ -114,7 +114,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[List['ResourceLog']]
+        Response[list['ResourceLog']]
     """
 
     kwargs = _get_kwargs(
@@ -130,7 +130,7 @@ async def asyncio(
     agent_name: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[List["ResourceLog"]]:
+) -> Optional[list["ResourceLog"]]:
     """
     Args:
         agent_name (str):
@@ -140,7 +140,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        List['ResourceLog']
+        list['ResourceLog']
     """
 
     return (

@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.agent_deployment_history import AgentDeploymentHistory
+from ...models.agent_history import AgentHistory
 from ...types import Response
 
 
@@ -22,12 +22,12 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[list["AgentDeploymentHistory"]]:
+) -> Optional[list["AgentHistory"]]:
     if response.status_code == 200:
         response_200 = []
         _response_200 = response.json()
         for response_200_item_data in _response_200:
-            response_200_item = AgentDeploymentHistory.from_dict(response_200_item_data)
+            response_200_item = AgentHistory.from_dict(response_200_item_data)
 
             response_200.append(response_200_item)
 
@@ -40,7 +40,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[list["AgentDeploymentHistory"]]:
+) -> Response[list["AgentHistory"]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -53,7 +53,7 @@ def sync_detailed(
     request_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[list["AgentDeploymentHistory"]]:
+) -> Response[list["AgentHistory"]]:
     """Get all history for a specific request ID from all agents
 
     Args:
@@ -64,7 +64,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['AgentDeploymentHistory']]
+        Response[list['AgentHistory']]
     """
 
     kwargs = _get_kwargs(
@@ -82,7 +82,7 @@ def sync(
     request_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[list["AgentDeploymentHistory"]]:
+) -> Optional[list["AgentHistory"]]:
     """Get all history for a specific request ID from all agents
 
     Args:
@@ -93,7 +93,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['AgentDeploymentHistory']
+        list['AgentHistory']
     """
 
     return sync_detailed(
@@ -106,7 +106,7 @@ async def asyncio_detailed(
     request_id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[list["AgentDeploymentHistory"]]:
+) -> Response[list["AgentHistory"]]:
     """Get all history for a specific request ID from all agents
 
     Args:
@@ -117,7 +117,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[list['AgentDeploymentHistory']]
+        Response[list['AgentHistory']]
     """
 
     kwargs = _get_kwargs(
@@ -133,7 +133,7 @@ async def asyncio(
     request_id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[list["AgentDeploymentHistory"]]:
+) -> Optional[list["AgentHistory"]]:
     """Get all history for a specific request ID from all agents
 
     Args:
@@ -144,7 +144,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        list['AgentDeploymentHistory']
+        list['AgentHistory']
     """
 
     return (

@@ -6,15 +6,24 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.function import Function
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     function_name: str,
+    *,
+    environment: Union[Unset, str] = UNSET,
 ) -> dict[str, Any]:
+    params: dict[str, Any] = {}
+
+    params["environment"] = environment
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: dict[str, Any] = {
         "method": "get",
         "url": f"/functions/{function_name}",
+        "params": params,
     }
 
     return _kwargs
@@ -44,11 +53,13 @@ def sync_detailed(
     function_name: str,
     *,
     client: AuthenticatedClient,
+    environment: Union[Unset, str] = UNSET,
 ) -> Response[Function]:
     """Get function by name
 
     Args:
         function_name (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -60,6 +71,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         function_name=function_name,
+        environment=environment,
     )
 
     response = client.get_httpx_client().request(
@@ -73,11 +85,13 @@ def sync(
     function_name: str,
     *,
     client: AuthenticatedClient,
+    environment: Union[Unset, str] = UNSET,
 ) -> Optional[Function]:
     """Get function by name
 
     Args:
         function_name (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -90,6 +104,7 @@ def sync(
     return sync_detailed(
         function_name=function_name,
         client=client,
+        environment=environment,
     ).parsed
 
 
@@ -97,11 +112,13 @@ async def asyncio_detailed(
     function_name: str,
     *,
     client: AuthenticatedClient,
+    environment: Union[Unset, str] = UNSET,
 ) -> Response[Function]:
     """Get function by name
 
     Args:
         function_name (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -113,6 +130,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         function_name=function_name,
+        environment=environment,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -124,11 +142,13 @@ async def asyncio(
     function_name: str,
     *,
     client: AuthenticatedClient,
+    environment: Union[Unset, str] = UNSET,
 ) -> Optional[Function]:
     """Get function by name
 
     Args:
         function_name (str):
+        environment (Union[Unset, str]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -142,5 +162,6 @@ async def asyncio(
         await asyncio_detailed(
             function_name=function_name,
             client=client,
+            environment=environment,
         )
     ).parsed

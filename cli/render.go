@@ -27,30 +27,33 @@ func output(resource Resource, slices []interface{}, outputFormat string) {
 	printTable(resource, slices)
 }
 
+func retrieveKey(itemMap map[string]interface{}, key string) string {
+	if value, ok := itemMap[key]; ok {
+		return value.(string)
+	}
+	if value, ok := itemMap["metadata"].(map[string]interface{})[key]; ok {
+		return value.(string)
+	}
+	return "-"
+}
+
 func printTable(_ Resource, slices []interface{}) {
 	// Print header with fixed width columns
-	fmt.Printf("%-15s %-20s %-20s %-20s\n", "WORKSPACE", "NAME", "CREATED_AT", "UPDATED_AT")
+	fmt.Printf("%-15s %-24s %-20s %-20s\n", "WORKSPACE", "NAME", "CREATED_AT", "UPDATED_AT")
 
 	// Print each item in the array
 	for _, item := range slices {
 		// Convert item to map to access fields
 		if itemMap, ok := item.(map[string]interface{}); ok {
 			// Get the workspace field, default to "-" if not found
-			workspace, _ := itemMap["workspace"].(string)
-			if workspace == "" {
-				workspace = "-"
-			}
+			workspace := retrieveKey(itemMap, "workspace")
+
 			// Get the name field, default to "-" if not found
-			name, _ := itemMap["name"].(string)
-			if name == "" {
-				name = "-"
-			}
+			name := retrieveKey(itemMap, "name")
 
 			// Get the created_at field, default to "-" if not found
-			createdAt, _ := itemMap["created_at"].(string)
-			if createdAt == "" {
-				createdAt = "-"
-			} else {
+			createdAt := retrieveKey(itemMap, "createdAt")
+			if createdAt != "-" {
 				// Parse and format the date
 				if parsedTime, err := time.Parse(time.RFC3339, createdAt); err == nil {
 					createdAt = parsedTime.Format("2006-01-02 15:04:05")
@@ -58,10 +61,9 @@ func printTable(_ Resource, slices []interface{}) {
 			}
 
 			// Get the updated_at field, default to "-" if not found
-			updatedAt, _ := itemMap["updated_at"].(string)
-			if updatedAt == "" {
-				updatedAt = "-"
-			} else {
+			updatedAt := retrieveKey(itemMap, "updatedAt")
+			if updatedAt != "-" {
+				// Parse and format the date
 				// Parse and format the date
 				if parsedTime, err := time.Parse(time.RFC3339, updatedAt); err == nil {
 					updatedAt = parsedTime.Format("2006-01-02 15:04:05")
@@ -69,7 +71,7 @@ func printTable(_ Resource, slices []interface{}) {
 			}
 
 			// Print the fields with fixed width columns
-			fmt.Printf("%-15s %-20s %-20s %-20s\n", workspace, name, createdAt, updatedAt)
+			fmt.Printf("%-15s %-24s %-20s %-20s\n", workspace, name, createdAt, updatedAt)
 		}
 	}
 }
@@ -81,11 +83,8 @@ func printJson(resource Resource, slices []interface{}) {
 			formatted = append(formatted, Result{
 				ApiVersion: "beamlit.com/v1alpha1",
 				Kind:       resource.Kind,
-				Metadata: ResultMetadata{
-					Workspace: sliceMap["workspace"].(string),
-					Name:      sliceMap["name"].(string),
-				},
-				Spec: slice,
+				Metadata:   sliceMap["metadata"],
+				Spec:       sliceMap["spec"],
 			})
 		}
 	}
@@ -105,11 +104,8 @@ func printYaml(resource Resource, slices []interface{}, pretty bool) {
 			formatted = append(formatted, Result{
 				ApiVersion: "beamlit.com/v1alpha1",
 				Kind:       resource.Kind,
-				Metadata: ResultMetadata{
-					Workspace: sliceMap["workspace"].(string),
-					Name:      sliceMap["name"].(string),
-				},
-				Spec: slice,
+				Metadata:   sliceMap["metadata"],
+				Spec:       sliceMap["spec"],
 			})
 		}
 	}

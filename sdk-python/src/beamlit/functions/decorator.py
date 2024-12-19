@@ -6,22 +6,22 @@ from logging import getLogger
 
 from beamlit.authentication import new_client
 from beamlit.common.settings import get_settings
-from beamlit.models import FunctionDeployment, FunctionKit
+from beamlit.models import Function, FunctionKit
 from beamlit.run import RunClient
 from langchain_core.tools import create_schema_from_function
 
 logger = getLogger(__name__)
 
 
-def get_remote_function(func: Callable, bl_function: FunctionDeployment):
+def get_remote_function(func: Callable, function: Function):
     settings = get_settings()
+    name = (function and function.metadata and function.metadata.name) or func.__name__
 
     def _partial(*args, **kwargs):
         # Get function signature parameters
         try:
             client = new_client()
             run_client = RunClient(client)
-            name = (bl_function and bl_function.function) or func.__name__
             logger.debug(
                 f"Calling remote function: NAME={name}"
                 f" PARAMS={kwargs} ENVIRONMENT={settings.environment}"
@@ -47,7 +47,7 @@ def get_remote_function(func: Callable, bl_function: FunctionDeployment):
                 return response.json()
             return content
         except Exception as e:
-            logger.error(f"Error calling function {bl_function.id}: {e}")
+            logger.error(f"Error calling function {name}: {e}")
             raise e
 
     remote_func = _partial
@@ -67,17 +67,15 @@ def kit(bl_kit: FunctionKit = None, **kwargs: dict) -> Callable:
     return wrapper
 
 
-def function(
-    *args, bl_function: FunctionDeployment = None, kit=False, **kwargs: dict
-) -> Callable:
+def function(*args, function: Function = None, kit=False, **kwargs: dict) -> Callable:
     """Create function tools with Beamlit and LangChain integration."""
     settings = get_settings()
 
     def wrapper(func: Callable) -> Callable:
-        if bl_function and not func.__doc__ and bl_function.description:
-            func.__doc__ = bl_function.description
+        if function and not func.__doc__ and function.spec and function.spec.description:
+            func.__doc__ = function.spec.description
         if settings.remote:
-            remote_func = get_remote_function(func, bl_function)
+            remote_func = get_remote_function(func, function)
             if not kwargs.get("args_schema"):
                 kwargs["args_schema"] = create_schema_from_function(
                     func.__name__,
@@ -87,5 +85,4 @@ def function(
             return remote_func
         return func
 
-    return wrapper
     return wrapper

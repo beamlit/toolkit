@@ -26,15 +26,7 @@ var rootCmd = &cobra.Command{
 	Use:   "bl",
 	Short: "Beamlit CLI is a command line tool to interact with Beamlit APIs.",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
-			BASE_URL = url
-		}
-		if runUrl := os.Getenv("BEAMLIT_RUN_URL"); runUrl != "" {
-			RUN_URL = runUrl
-		}
-		if appUrl := os.Getenv("BEAMLIT_APP_URL"); appUrl != "" {
-			APP_URL = appUrl
-		}
+		setEnvs()
 
 		reg = &Operations{
 			BaseURL:     BASE_URL,
@@ -63,7 +55,21 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+func setEnvs() {
+	if url := os.Getenv("BEAMLIT_API_URL"); url != "" {
+		BASE_URL = url
+	}
+	if runUrl := os.Getenv("BEAMLIT_RUN_URL"); runUrl != "" {
+		RUN_URL = runUrl
+	}
+	if appUrl := os.Getenv("BEAMLIT_APP_URL"); appUrl != "" {
+		APP_URL = appUrl
+	}
+}
+
 func Execute(releaseVersion string, releaseCommit string, releaseDate string) error {
+	setEnvs()
+
 	reg = &Operations{
 		BaseURL:     BASE_URL,
 		RunURL:      RUN_URL,
@@ -94,6 +100,9 @@ func Execute(releaseVersion string, releaseCommit string, releaseDate string) er
 	}
 	if environment == "" {
 		environment = sdk.CurrentContext().Environment
+	}
+	if environment == "" {
+		environment = "production"
 	}
 	if version == "" {
 		version = releaseVersion

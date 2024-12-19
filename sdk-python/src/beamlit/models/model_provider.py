@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -6,7 +6,7 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.labels_type_0 import LabelsType0
+    from ..models.metadata_labels import MetadataLabels
     from ..models.provider_config import ProviderConfig
 
 
@@ -19,39 +19,37 @@ class ModelProvider:
 
     Attributes:
         created_at (Union[Unset, str]): The date and time when the resource was created
-        created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
+        created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         comment (Union[Unset, str]): Model provider description
         config (Union[Unset, ProviderConfig]): Model provider config
         display_name (Union[Unset, str]): Model provider display name
-        labels (Union['LabelsType0', None, Unset]): Labels
+        labels (Union[Unset, MetadataLabels]): Labels
         name (Union[Unset, str]): Model provider name
         type_ (Union[Unset, str]): Model provider type
         workspace (Union[Unset, str]): Workspace name
     """
 
     created_at: Union[Unset, str] = UNSET
-    created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
+    created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     comment: Union[Unset, str] = UNSET
     config: Union[Unset, "ProviderConfig"] = UNSET
     display_name: Union[Unset, str] = UNSET
-    labels: Union["LabelsType0", None, Unset] = UNSET
+    labels: Union[Unset, "MetadataLabels"] = UNSET
     name: Union[Unset, str] = UNSET
     type_: Union[Unset, str] = UNSET
     workspace: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        from ..models.labels_type_0 import LabelsType0
-
         created_at = self.created_at
 
-        created_by = self.created_by
-
         updated_at = self.updated_at
+
+        created_by = self.created_by
 
         updated_by = self.updated_by
 
@@ -63,13 +61,9 @@ class ModelProvider:
 
         display_name = self.display_name
 
-        labels: Union[None, Unset, dict[str, Any]]
-        if isinstance(self.labels, Unset):
-            labels = UNSET
-        elif isinstance(self.labels, LabelsType0):
+        labels: Union[Unset, dict[str, Any]] = UNSET
+        if not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
-        else:
-            labels = self.labels
 
         name = self.name
 
@@ -81,13 +75,13 @@ class ModelProvider:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if created_at is not UNSET:
-            field_dict["created_at"] = created_at
-        if created_by is not UNSET:
-            field_dict["created_by"] = created_by
+            field_dict["createdAt"] = created_at
         if updated_at is not UNSET:
-            field_dict["updated_at"] = updated_at
+            field_dict["updatedAt"] = updated_at
+        if created_by is not UNSET:
+            field_dict["createdBy"] = created_by
         if updated_by is not UNSET:
-            field_dict["updated_by"] = updated_by
+            field_dict["updatedBy"] = updated_by
         if comment is not UNSET:
             field_dict["comment"] = comment
         if config is not UNSET:
@@ -107,19 +101,19 @@ class ModelProvider:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
-        from ..models.labels_type_0 import LabelsType0
+        from ..models.metadata_labels import MetadataLabels
         from ..models.provider_config import ProviderConfig
 
         if not src_dict:
             return None
         d = src_dict.copy()
-        created_at = d.pop("created_at", UNSET)
+        created_at = d.pop("createdAt", UNSET)
 
-        created_by = d.pop("created_by", UNSET)
+        updated_at = d.pop("updatedAt", UNSET)
 
-        updated_at = d.pop("updated_at", UNSET)
+        created_by = d.pop("createdBy", UNSET)
 
-        updated_by = d.pop("updated_by", UNSET)
+        updated_by = d.pop("updatedBy", UNSET)
 
         comment = d.pop("comment", UNSET)
 
@@ -132,22 +126,12 @@ class ModelProvider:
 
         display_name = d.pop("display_name", UNSET)
 
-        def _parse_labels(data: object) -> Union["LabelsType0", None, Unset]:
-            if data is None:
-                return data
-            if isinstance(data, Unset):
-                return data
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                componentsschemas_labels_type_0 = LabelsType0.from_dict(data)
-
-                return componentsschemas_labels_type_0
-            except:  # noqa: E722
-                pass
-            return cast(Union["LabelsType0", None, Unset], data)
-
-        labels = _parse_labels(d.pop("labels", UNSET))
+        _labels = d.pop("labels", UNSET)
+        labels: Union[Unset, MetadataLabels]
+        if isinstance(_labels, Unset):
+            labels = UNSET
+        else:
+            labels = MetadataLabels.from_dict(_labels)
 
         name = d.pop("name", UNSET)
 
@@ -157,8 +141,8 @@ class ModelProvider:
 
         model_provider = cls(
             created_at=created_at,
-            created_by=created_by,
             updated_at=updated_at,
+            created_by=created_by,
             updated_by=updated_by,
             comment=comment,
             config=config,

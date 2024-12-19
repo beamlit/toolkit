@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -113,4 +114,24 @@ func handleDirectory(filePath string, recursive bool, n int) ([]Result, error) {
 		results = append(results, fileResults...)
 	}
 	return results, nil
+}
+
+func retrieveListParams(typeParams reflect.Type, options map[string]string) reflect.Value {
+	paramsValue := reflect.New(typeParams)
+
+	elemValue := paramsValue.Elem()
+	for fieldName, value := range options {
+		field := elemValue.FieldByName(strings.Title(fieldName))
+		if field.IsValid() && field.CanSet() {
+			switch field.Kind() {
+			case reflect.Ptr:
+				ptrValue := reflect.New(field.Type().Elem())
+				ptrValue.Elem().SetString(value)
+				field.Set(ptrValue)
+			case reflect.String:
+				field.SetString(value)
+			}
+		}
+	}
+	return paramsValue
 }

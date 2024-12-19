@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -25,7 +25,7 @@ class ResourceEnvironmentMetricsQueryPerSecondPerRegionPerCode:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        region: Union[Unset, Dict[str, Any]] = UNSET
+        region: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.region, Unset):
             region = self.region.to_dict()
 
@@ -38,9 +38,11 @@ class ResourceEnvironmentMetricsQueryPerSecondPerRegionPerCode:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.qps import QPS
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         _region = d.pop("region", UNSET)
         region: Union[Unset, QPS]

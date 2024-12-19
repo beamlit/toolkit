@@ -22,7 +22,7 @@ func (r *Operations) ServeCmd() *cobra.Command {
 		Aliases: []string{"s", "se"},
 		Short:   "Serve a beamlit project",
 		Long:    "Serve a beamlit project",
-		Example: `  bl serve --hotreload --remote --port 1338`,
+		Example: `  bl serve --remote --hotreload --port 1338`,
 		Run: func(cmd *cobra.Command, args []string) {
 			uvicorn := exec.Command(
 				"uvicorn",

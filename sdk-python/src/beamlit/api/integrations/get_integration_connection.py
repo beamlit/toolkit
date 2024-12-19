@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.integration import Integration
+from ...models.integration_connection import IntegrationConnection
 from ...types import Response
 
 
@@ -20,9 +20,11 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Integration]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[IntegrationConnection]:
     if response.status_code == 200:
-        response_200 = Integration.from_dict(response.json())
+        response_200 = IntegrationConnection.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -31,7 +33,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Integration]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[IntegrationConnection]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -44,7 +48,7 @@ def sync_detailed(
     connection_name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Integration]:
+) -> Response[IntegrationConnection]:
     """Get integration
 
      Returns an integration connection by integration name and connection name.
@@ -57,7 +61,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Integration]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
@@ -75,7 +79,7 @@ def sync(
     connection_name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[Integration]:
+) -> Optional[IntegrationConnection]:
     """Get integration
 
      Returns an integration connection by integration name and connection name.
@@ -88,7 +92,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Integration
+        IntegrationConnection
     """
 
     return sync_detailed(
@@ -101,7 +105,7 @@ async def asyncio_detailed(
     connection_name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Integration]:
+) -> Response[IntegrationConnection]:
     """Get integration
 
      Returns an integration connection by integration name and connection name.
@@ -114,7 +118,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Integration]
+        Response[IntegrationConnection]
     """
 
     kwargs = _get_kwargs(
@@ -130,7 +134,7 @@ async def asyncio(
     connection_name: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[Integration]:
+) -> Optional[IntegrationConnection]:
     """Get integration
 
      Returns an integration connection by integration name and connection name.
@@ -143,7 +147,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Integration
+        IntegrationConnection
     """
 
     return (

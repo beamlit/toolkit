@@ -1,14 +1,13 @@
 import os
 from logging import getLogger
-from typing import List, Tuple, Type, Union
+from typing import Tuple, Type, Union
 
-from beamlit.api.functions import get_function_deployment
-from beamlit.api.models import get_model_deployment
+from beamlit.api.agents import get_agent
+from beamlit.api.functions import get_function
+from beamlit.api.models import get_model
 from beamlit.client import AuthenticatedClient
 from beamlit.common.logger import init as init_logger
-from beamlit.models.agent_deployment import AgentDeployment
-from beamlit.models.function_deployment import FunctionDeployment
-from beamlit.models.model_deployment import ModelDeployment
+from beamlit.models import Agent, Function, Model
 from beamlit.types import UNSET, Unset
 from langchain_core.language_models.chat_models import BaseChatModel
 from langgraph.graph.graph import CompiledGraph
@@ -26,9 +25,9 @@ def get_settings():
 
 class SettingsAgent(BaseSettings):
     agent: Union[None, CompiledGraph, BaseChatModel] = None
-    chain: Union[Unset, List[AgentDeployment]] = UNSET
-    model: Union[Unset, ModelDeployment] = UNSET
-    functions: Union[Unset, List[FunctionDeployment]] = UNSET
+    chain: Union[Unset, list[Agent]] = UNSET
+    model: Union[Unset, Model] = UNSET
+    functions: Union[Unset, list[Function]] = UNSET
     functions_directory: str = Field(default="src/functions")
     chat_model: Union[None, BaseChatModel] = None
     module: str = Field(default="main.main")
@@ -106,26 +105,29 @@ def init_agent(
     name = settings.name
     env = settings.environment
 
-    agent_deployment = get_agent_deployment.sync(name, env, client=client)
-    function_deployments = []
-    agent_chain_deployments = []
-    if agent_deployment.functions:
-        for function in agent_deployment.functions:
-            function_deployment = get_function_deployment.sync(function, env, client=client)
-            function_deployments.append(function_deployment)
-        settings.agent.functions = function_deployments
+    agent = get_agent.sync(name, environment=env, client=client)
+    if not agent:
+        raise ValueError(f"Agent {name} not found")
+    functions: list[Function] = []
+    agents_chain: list[Agent] = []
+    if agent.spec.functions:
+        for function in agent.spec.functions:
+            function = get_function.sync(function, environment=env, client=client)
+            if function:
+                functions.append(function)
+        settings.agent.functions = functions
 
-    if agent_deployment.agent_chain:
-        for chain in agent_deployment.agent_chain:
+    if agent.spec.agent_chain:
+        for chain in agent.spec.agent_chain:
             if chain.enabled:
-                agent_deployment = get_agent_deployment.sync(chain.name, env, client=client)
+                agent_chain = get_agent.sync(chain.name, environment=env, client=client)
                 if chain.description:
-                    agent_deployment.description = chain.description
-                agent_chain_deployments.append(agent_deployment)
-        settings.agent.chain = agent_chain_deployments
-    if agent_deployment.model:
-        model_deployment = get_model_deployment.sync(agent_deployment.model, env, client=client)
-        settings.agent.model = model_deployment
+                    agent_chain.spec.description = chain.description
+                agents_chain.append(agent_chain)
+        settings.agent.chain = agents_chain
+    if agent.spec.model:
+        model = get_model.sync(agent.spec.model, environment=env, client=client)
+        settings.agent.model = model
 
     content_generate = generate(destination, dry_run=True)
     compared_content = None

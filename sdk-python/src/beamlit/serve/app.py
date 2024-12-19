@@ -16,6 +16,7 @@ from .middlewares import AccessLogMiddleware, AddProcessTimeHeader
 sys.path.insert(0, os.getcwd())
 sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 
+
 def import_module():
     settings = get_settings()
     main_module = importlib.import_module(".".join(settings.server.module.split(".")[0:-1]))

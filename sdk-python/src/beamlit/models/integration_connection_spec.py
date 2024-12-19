@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -29,13 +29,13 @@ class IntegrationConnectionSpec:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        config: Union[Unset, Dict[str, Any]] = UNSET
+        config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.config, Unset):
             config = self.config.to_dict()
 
         integration = self.integration
 
-        secret: Union[Unset, Dict[str, Any]] = UNSET
+        secret: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.secret, Unset):
             secret = self.secret.to_dict()
 
@@ -52,10 +52,12 @@ class IntegrationConnectionSpec:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.integration_connection_config import IntegrationConnectionConfig
         from ..models.integration_connection_secret import IntegrationConnectionSecret
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         _config = d.pop("config", UNSET)
         config: Union[Unset, IntegrationConnectionConfig]

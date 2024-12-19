@@ -6,14 +6,13 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.model import Model
-from ...models.model_with_deployments import ModelWithDeployments
 from ...types import Response
 
 
 def _get_kwargs(
     model_name: str,
     *,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -55,7 +54,7 @@ def sync_detailed(
     model_name: str,
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Response[Model]:
     """Create or update model
 
@@ -63,8 +62,8 @@ def sync_detailed(
 
     Args:
         model_name (str):
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -90,7 +89,7 @@ def sync(
     model_name: str,
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Optional[Model]:
     """Create or update model
 
@@ -98,8 +97,8 @@ def sync(
 
     Args:
         model_name (str):
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -120,7 +119,7 @@ async def asyncio_detailed(
     model_name: str,
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Response[Model]:
     """Create or update model
 
@@ -128,8 +127,8 @@ async def asyncio_detailed(
 
     Args:
         model_name (str):
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -153,7 +152,7 @@ async def asyncio(
     model_name: str,
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Optional[Model]:
     """Create or update model
 
@@ -161,8 +160,8 @@ async def asyncio(
 
     Args:
         model_name (str):
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

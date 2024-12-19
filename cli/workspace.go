@@ -70,7 +70,7 @@ func CheckWorkspaceAccess(workspaceName string, credentials sdk.Credentials) err
 		os.Exit(1)
 	}
 	if response.StatusCode >= 400 {
-		ErrorHandler("workspace", workspaceName, buf.String())
+		ErrorHandler(response.Request, "workspace", workspaceName, buf.String())
 		os.Exit(1)
 	}
 	return nil

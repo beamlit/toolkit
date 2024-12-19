@@ -1,4 +1,4 @@
-from typing import Any, List, Type, TypeVar, Union, cast
+from typing import Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -13,14 +13,14 @@ class EnvironmentSpec:
     """Environment specification
 
     Attributes:
-        policies (Union[Unset, List[str]]):
+        policies (Union[Unset, list[str]]):
     """
 
-    policies: Union[Unset, List[str]] = UNSET
+    policies: Union[Unset, list[str]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        policies: Union[Unset, List[str]] = UNSET
+        policies: Union[Unset, list[str]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
@@ -33,9 +33,11 @@ class EnvironmentSpec:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
-        policies = cast(List[str], d.pop("policies", UNSET))
+        policies = cast(list[str], d.pop("policies", UNSET))
 
         environment_spec = cls(
             policies=policies,

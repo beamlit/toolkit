@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -22,7 +22,7 @@ class AgentHistory:
         agent (Union[Unset, str]): Agent name
         end (Union[Unset, str]): End time
         environment (Union[Unset, str]): Environment name
-        events (Union[Unset, List['AgentHistoryEvent']]): Events
+        events (Union[Unset, list['AgentHistoryEvent']]): Events
         request_id (Union[Unset, str]): Request ID
         start (Union[Unset, str]): Start time
         status (Union[Unset, str]): Status, eg: running, success, failed
@@ -35,7 +35,7 @@ class AgentHistory:
     agent: Union[Unset, str] = UNSET
     end: Union[Unset, str] = UNSET
     environment: Union[Unset, str] = UNSET
-    events: Union[Unset, List["AgentHistoryEvent"]] = UNSET
+    events: Union[Unset, list["AgentHistoryEvent"]] = UNSET
     request_id: Union[Unset, str] = UNSET
     start: Union[Unset, str] = UNSET
     status: Union[Unset, str] = UNSET
@@ -54,7 +54,7 @@ class AgentHistory:
 
         environment = self.environment
 
-        events: Union[Unset, List[Dict[str, Any]]] = UNSET
+        events: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.events, Unset):
             events = []
             for events_item_data in self.events:
@@ -100,9 +100,11 @@ class AgentHistory:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.agent_history_event import AgentHistoryEvent
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("createdAt", UNSET)
 

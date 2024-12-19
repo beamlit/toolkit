@@ -6,13 +6,12 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.agent import Agent
-from ...models.agent_with_deployments import AgentWithDeployments
 from ...types import Response
 
 
 def _get_kwargs(
     *,
-    body: AgentWithDeployments,
+    body: Agent,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -53,13 +52,12 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    body: AgentWithDeployments,
+    body: Agent,
 ) -> Response[Agent]:
     """Create agent by name
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        body (Agent): Agent
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -83,13 +81,12 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    body: AgentWithDeployments,
+    body: Agent,
 ) -> Optional[Agent]:
     """Create agent by name
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        body (Agent): Agent
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -108,13 +105,12 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    body: AgentWithDeployments,
+    body: Agent,
 ) -> Response[Agent]:
     """Create agent by name
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        body (Agent): Agent
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -136,13 +132,12 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    body: AgentWithDeployments,
+    body: Agent,
 ) -> Optional[Agent]:
     """Create agent by name
 
     Args:
-        body (AgentWithDeployments): Logical object representing an agent but with deployment
-            definition inside
+        body (Agent): Agent
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

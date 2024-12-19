@@ -164,7 +164,7 @@ func (r *Operations) DeployAgentAppCmd() *cobra.Command {
 		Aliases: []string{"d", "dp"},
 		Short:   "Deploy a beamlit agent app",
 		Long:    "Deploy a beamlit agent app, you must be in a beamlit agent app directory.",
-		Example: `bl deploy-agent-app`,
+		Example: `bl deploy`,
 		Run: func(cmd *cobra.Command, args []string) {
 
 			// Create a temporary directory for deployment files

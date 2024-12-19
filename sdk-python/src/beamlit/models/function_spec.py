@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -6,12 +6,13 @@ from attrs import field as _attrs_field
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.core_spec_configurations import CoreSpecConfigurations
     from ..models.flavor import Flavor
     from ..models.function_kit import FunctionKit
+    from ..models.model_private_cluster import ModelPrivateCluster
     from ..models.pod_template_spec import PodTemplateSpec
     from ..models.runtime import Runtime
     from ..models.serverless_config import ServerlessConfig
-    from ..models.spec_configuration import SpecConfiguration
     from ..models.store_function_parameter import StoreFunctionParameter
 
 
@@ -23,82 +24,85 @@ class FunctionSpec:
     """Function specification
 
     Attributes:
-        configurations (Union[Unset, SpecConfiguration]): Agent configuration, this is a key value storage. In your
-            agent you can retrieve the value with config[key]
+        configurations (Union[Unset, CoreSpecConfigurations]): Optional configurations for the object
         enabled (Union[Unset, bool]): Enable or disable the agent
-        flavors (Union[Unset, List['Flavor']]): Types of hardware available for deployments
-        integration_connections (Union[Unset, List[str]]):
+        flavors (Union[Unset, list['Flavor']]): Types of hardware available for deployments
+        integration_connections (Union[Unset, list[str]]):
         pod_template (Union[Unset, PodTemplateSpec]): Pod template specification
-        policies (Union[Unset, List[str]]):
+        policies (Union[Unset, list[str]]):
+        private_clusters (Union[Unset, ModelPrivateCluster]): Private cluster where the model deployment is deployed
         runtime (Union[Unset, Runtime]): Set of configurations for a deployment
         serverless_config (Union[Unset, ServerlessConfig]): Configuration for a serverless deployment
         description (Union[Unset, str]): Function description, very important for the agent function to work with an LLM
-        kit (Union[Unset, List['FunctionKit']]): The kit of the function deployment
-        parameters (Union[Unset, List['StoreFunctionParameter']]): Function parameters, for your function to be callable
+        kit (Union[Unset, list['FunctionKit']]): The kit of the function deployment
+        parameters (Union[Unset, list['StoreFunctionParameter']]): Function parameters, for your function to be callable
             with Agent
         store_id (Union[Unset, str]): Store id
     """
 
-    configurations: Union[Unset, "SpecConfiguration"] = UNSET
+    configurations: Union[Unset, "CoreSpecConfigurations"] = UNSET
     enabled: Union[Unset, bool] = UNSET
-    flavors: Union[Unset, List["Flavor"]] = UNSET
-    integration_connections: Union[Unset, List[str]] = UNSET
+    flavors: Union[Unset, list["Flavor"]] = UNSET
+    integration_connections: Union[Unset, list[str]] = UNSET
     pod_template: Union[Unset, "PodTemplateSpec"] = UNSET
-    policies: Union[Unset, List[str]] = UNSET
+    policies: Union[Unset, list[str]] = UNSET
+    private_clusters: Union[Unset, "ModelPrivateCluster"] = UNSET
     runtime: Union[Unset, "Runtime"] = UNSET
     serverless_config: Union[Unset, "ServerlessConfig"] = UNSET
     description: Union[Unset, str] = UNSET
-    kit: Union[Unset, List["FunctionKit"]] = UNSET
-    parameters: Union[Unset, List["StoreFunctionParameter"]] = UNSET
+    kit: Union[Unset, list["FunctionKit"]] = UNSET
+    parameters: Union[Unset, list["StoreFunctionParameter"]] = UNSET
     store_id: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        configurations: Union[Unset, Dict[str, Any]] = UNSET
+        configurations: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.configurations, Unset):
             configurations = self.configurations.to_dict()
 
         enabled = self.enabled
 
-        flavors: Union[Unset, List[Dict[str, Any]]] = UNSET
+        flavors: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.flavors, Unset):
             flavors = []
             for componentsschemas_flavors_item_data in self.flavors:
-                componentsschemas_flavors_item = (
-                    componentsschemas_flavors_item_data.to_dict()
-                )
+                componentsschemas_flavors_item = componentsschemas_flavors_item_data.to_dict()
                 flavors.append(componentsschemas_flavors_item)
 
-        integration_connections: Union[Unset, List[str]] = UNSET
+        integration_connections: Union[Unset, list[str]] = UNSET
         if not isinstance(self.integration_connections, Unset):
             integration_connections = self.integration_connections
 
-        pod_template: Union[Unset, Dict[str, Any]] = UNSET
+        pod_template: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.pod_template, Unset):
             pod_template = self.pod_template.to_dict()
 
-        policies: Union[Unset, List[str]] = UNSET
+        policies: Union[Unset, list[str]] = UNSET
         if not isinstance(self.policies, Unset):
             policies = self.policies
 
-        runtime: Union[Unset, Dict[str, Any]] = UNSET
+        private_clusters: Union[Unset, dict[str, Any]] = UNSET
+        if not isinstance(self.private_clusters, Unset):
+            private_clusters = self.private_clusters.to_dict()
+
+        runtime: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.runtime, Unset):
             runtime = self.runtime.to_dict()
 
-        serverless_config: Union[Unset, Dict[str, Any]] = UNSET
+        serverless_config: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.serverless_config, Unset):
             serverless_config = self.serverless_config.to_dict()
 
         description = self.description
 
-        kit: Union[Unset, List[Dict[str, Any]]] = UNSET
+        kit: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.kit, Unset):
             kit = []
             for kit_item_data in self.kit:
                 kit_item = kit_item_data.to_dict()
                 kit.append(kit_item)
 
-        parameters: Union[Unset, List[Dict[str, Any]]] = UNSET
+        parameters: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.parameters, Unset):
             parameters = []
             for parameters_item_data in self.parameters:
@@ -122,6 +126,8 @@ class FunctionSpec:
             field_dict["podTemplate"] = pod_template
         if policies is not UNSET:
             field_dict["policies"] = policies
+        if private_clusters is not UNSET:
+            field_dict["privateClusters"] = private_clusters
         if runtime is not UNSET:
             field_dict["runtime"] = runtime
         if serverless_config is not UNSET:
@@ -133,42 +139,41 @@ class FunctionSpec:
         if parameters is not UNSET:
             field_dict["parameters"] = parameters
         if store_id is not UNSET:
-            field_dict["store_id"] = store_id
+            field_dict["storeId"] = store_id
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        from ..models.core_spec_configurations import CoreSpecConfigurations
         from ..models.flavor import Flavor
         from ..models.function_kit import FunctionKit
+        from ..models.model_private_cluster import ModelPrivateCluster
         from ..models.pod_template_spec import PodTemplateSpec
         from ..models.runtime import Runtime
         from ..models.serverless_config import ServerlessConfig
-        from ..models.spec_configuration import SpecConfiguration
         from ..models.store_function_parameter import StoreFunctionParameter
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         _configurations = d.pop("configurations", UNSET)
-        configurations: Union[Unset, SpecConfiguration]
+        configurations: Union[Unset, CoreSpecConfigurations]
         if isinstance(_configurations, Unset):
             configurations = UNSET
         else:
-            configurations = SpecConfiguration.from_dict(_configurations)
+            configurations = CoreSpecConfigurations.from_dict(_configurations)
 
         enabled = d.pop("enabled", UNSET)
 
         flavors = []
         _flavors = d.pop("flavors", UNSET)
         for componentsschemas_flavors_item_data in _flavors or []:
-            componentsschemas_flavors_item = Flavor.from_dict(
-                componentsschemas_flavors_item_data
-            )
+            componentsschemas_flavors_item = Flavor.from_dict(componentsschemas_flavors_item_data)
 
             flavors.append(componentsschemas_flavors_item)
 
-        integration_connections = cast(
-            List[str], d.pop("integrationConnections", UNSET)
-        )
+        integration_connections = cast(list[str], d.pop("integrationConnections", UNSET))
 
         _pod_template = d.pop("podTemplate", UNSET)
         pod_template: Union[Unset, PodTemplateSpec]
@@ -177,7 +182,14 @@ class FunctionSpec:
         else:
             pod_template = PodTemplateSpec.from_dict(_pod_template)
 
-        policies = cast(List[str], d.pop("policies", UNSET))
+        policies = cast(list[str], d.pop("policies", UNSET))
+
+        _private_clusters = d.pop("privateClusters", UNSET)
+        private_clusters: Union[Unset, ModelPrivateCluster]
+        if isinstance(_private_clusters, Unset):
+            private_clusters = UNSET
+        else:
+            private_clusters = ModelPrivateCluster.from_dict(_private_clusters)
 
         _runtime = d.pop("runtime", UNSET)
         runtime: Union[Unset, Runtime]
@@ -209,7 +221,7 @@ class FunctionSpec:
 
             parameters.append(parameters_item)
 
-        store_id = d.pop("store_id", UNSET)
+        store_id = d.pop("storeId", UNSET)
 
         function_spec = cls(
             configurations=configurations,
@@ -218,6 +230,7 @@ class FunctionSpec:
             integration_connections=integration_connections,
             pod_template=pod_template,
             policies=policies,
+            private_clusters=private_clusters,
             runtime=runtime,
             serverless_config=serverless_config,
             description=description,

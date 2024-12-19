@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -50,7 +50,7 @@ class AgentMetadata:
 
         display_name = self.display_name
 
-        labels: Union[Unset, Dict[str, Any]] = UNSET
+        labels: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.labels, Unset):
             labels = self.labels.to_dict()
 
@@ -85,9 +85,11 @@ class AgentMetadata:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.metadata_labels import MetadataLabels
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         created_at = d.pop("createdAt", UNSET)
 

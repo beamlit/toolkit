@@ -6,3 +6,4 @@ dist/
 .venv
 tmp
 beamlit_generated.py
+test.yaml

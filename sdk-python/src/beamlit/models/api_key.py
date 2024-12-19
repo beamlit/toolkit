@@ -14,8 +14,8 @@ class ApiKey:
 
     Attributes:
         created_at (Union[Unset, str]): The date and time when the resource was created
-        created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
+        created_by (Union[Unset, str]): The user or service account who created the resource
         updated_by (Union[Unset, str]): The user or service account who updated the resource
         api_key (Union[Unset, str]): Api key
         expires_in (Union[Unset, str]): Duration until expiration (in seconds)
@@ -26,8 +26,8 @@ class ApiKey:
     """
 
     created_at: Union[Unset, str] = UNSET
-    created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
+    created_by: Union[Unset, str] = UNSET
     updated_by: Union[Unset, str] = UNSET
     api_key: Union[Unset, str] = UNSET
     expires_in: Union[Unset, str] = UNSET
@@ -40,9 +40,9 @@ class ApiKey:
     def to_dict(self) -> dict[str, Any]:
         created_at = self.created_at
 
-        created_by = self.created_by
-
         updated_at = self.updated_at
+
+        created_by = self.created_by
 
         updated_by = self.updated_by
 
@@ -62,13 +62,13 @@ class ApiKey:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if created_at is not UNSET:
-            field_dict["created_at"] = created_at
-        if created_by is not UNSET:
-            field_dict["created_by"] = created_by
+            field_dict["createdAt"] = created_at
         if updated_at is not UNSET:
-            field_dict["updated_at"] = updated_at
+            field_dict["updatedAt"] = updated_at
+        if created_by is not UNSET:
+            field_dict["createdBy"] = created_by
         if updated_by is not UNSET:
-            field_dict["updated_by"] = updated_by
+            field_dict["updatedBy"] = updated_by
         if api_key is not UNSET:
             field_dict["api_key"] = api_key
         if expires_in is not UNSET:
@@ -89,13 +89,13 @@ class ApiKey:
         if not src_dict:
             return None
         d = src_dict.copy()
-        created_at = d.pop("created_at", UNSET)
+        created_at = d.pop("createdAt", UNSET)
 
-        created_by = d.pop("created_by", UNSET)
+        updated_at = d.pop("updatedAt", UNSET)
 
-        updated_at = d.pop("updated_at", UNSET)
+        created_by = d.pop("createdBy", UNSET)
 
-        updated_by = d.pop("updated_by", UNSET)
+        updated_by = d.pop("updatedBy", UNSET)
 
         api_key = d.pop("api_key", UNSET)
 
@@ -111,8 +111,8 @@ class ApiKey:
 
         api_key = cls(
             created_at=created_at,
-            created_by=created_by,
             updated_at=updated_at,
+            created_by=created_by,
             updated_by=updated_by,
             api_key=api_key,
             expires_in=expires_in,

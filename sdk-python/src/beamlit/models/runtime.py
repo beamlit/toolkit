@@ -23,10 +23,12 @@ class Runtime:
         envs (Union[Unset, list[Any]]): The environment variables to set in the deployment. Should be a list of
             Kubernetes EnvVar types
         image (Union[Unset, str]): The Docker image for the deployment
+        metric_port (Union[Unset, int]): The port to serve the metrics on
         model (Union[Unset, str]): The slug name of the origin model. Only used if the deployment is a ModelDeployment
         readiness_probe (Union[Unset, RuntimeReadinessProbe]): The readiness probe. Should be a Kubernetes Probe type
         resources (Union[Unset, RuntimeResources]): The resources for the deployment. Should be a Kubernetes
             ResourceRequirements type
+        serving_port (Union[Unset, int]): The port to serve the model on
         type_ (Union[Unset, str]): The type of origin for the deployment
     """
 
@@ -34,9 +36,11 @@ class Runtime:
     command: Union[Unset, list[Any]] = UNSET
     envs: Union[Unset, list[Any]] = UNSET
     image: Union[Unset, str] = UNSET
+    metric_port: Union[Unset, int] = UNSET
     model: Union[Unset, str] = UNSET
     readiness_probe: Union[Unset, "RuntimeReadinessProbe"] = UNSET
     resources: Union[Unset, "RuntimeResources"] = UNSET
+    serving_port: Union[Unset, int] = UNSET
     type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -55,6 +59,8 @@ class Runtime:
 
         image = self.image
 
+        metric_port = self.metric_port
+
         model = self.model
 
         readiness_probe: Union[Unset, dict[str, Any]] = UNSET
@@ -64,6 +70,8 @@ class Runtime:
         resources: Union[Unset, dict[str, Any]] = UNSET
         if not isinstance(self.resources, Unset):
             resources = self.resources.to_dict()
+
+        serving_port = self.serving_port
 
         type_ = self.type_
 
@@ -78,12 +86,16 @@ class Runtime:
             field_dict["envs"] = envs
         if image is not UNSET:
             field_dict["image"] = image
+        if metric_port is not UNSET:
+            field_dict["metricPort"] = metric_port
         if model is not UNSET:
             field_dict["model"] = model
         if readiness_probe is not UNSET:
-            field_dict["readiness_probe"] = readiness_probe
+            field_dict["readinessProbe"] = readiness_probe
         if resources is not UNSET:
             field_dict["resources"] = resources
+        if serving_port is not UNSET:
+            field_dict["servingPort"] = serving_port
         if type_ is not UNSET:
             field_dict["type"] = type_
 
@@ -105,9 +117,11 @@ class Runtime:
 
         image = d.pop("image", UNSET)
 
+        metric_port = d.pop("metricPort", UNSET)
+
         model = d.pop("model", UNSET)
 
-        _readiness_probe = d.pop("readiness_probe", UNSET)
+        _readiness_probe = d.pop("readinessProbe", UNSET)
         readiness_probe: Union[Unset, RuntimeReadinessProbe]
         if isinstance(_readiness_probe, Unset):
             readiness_probe = UNSET
@@ -121,6 +135,8 @@ class Runtime:
         else:
             resources = RuntimeResources.from_dict(_resources)
 
+        serving_port = d.pop("servingPort", UNSET)
+
         type_ = d.pop("type", UNSET)
 
         runtime = cls(
@@ -128,9 +144,11 @@ class Runtime:
             command=command,
             envs=envs,
             image=image,
+            metric_port=metric_port,
             model=model,
             readiness_probe=readiness_probe,
             resources=resources,
+            serving_port=serving_port,
             type_=type_,
         )
 

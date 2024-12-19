@@ -25,6 +25,9 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			cat file.yaml | beamlit delete -f -
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
+			options := map[string]string{
+				"environment": environment,
+			}
 			results, err := getResults(filePath, recursive)
 			if err != nil {
 				fmt.Printf("error getting results: %v", err)
@@ -35,7 +38,8 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			for _, result := range results {
 				for _, resource := range resources {
 					if resource.Kind == result.Kind {
-						resource.DeleteFn(result.Metadata.Name)
+						name := result.Metadata.(map[string]interface{})["name"].(string)
+						resource.DeleteFn(name, options)
 					}
 				}
 			}
@@ -56,12 +60,15 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 			Aliases: []string{resource.Plural, resource.Short},
 			Short:   fmt.Sprintf("Delete a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
+				options := map[string]string{
+					"environment": environment,
+				}
 				if len(args) == 0 {
 					fmt.Println("no resource name provided")
 					os.Exit(1)
 				}
 				if len(args) == 1 {
-					resource.DeleteFn(args[0])
+					resource.DeleteFn(args[0], options)
 				}
 			},
 		}
@@ -71,7 +78,7 @@ func (r *Operations) DeleteCmd() *cobra.Command {
 	return cmd
 }
 
-func (resource Resource) DeleteFn(name string) {
+func (resource Resource) DeleteFn(name string, options map[string]string) {
 	ctx := context.Background()
 	// Use reflect to call the function
 	funcValue := reflect.ValueOf(resource.Delete)
@@ -81,6 +88,11 @@ func (resource Resource) DeleteFn(name string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(name)} // Add the context and the resource name
+
+	if resource.DeleteParamsType != nil {
+		paramsValue := retrieveListParams(resource.DeleteParamsType, options)
+		fnargs = append(fnargs, paramsValue)
+	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -110,7 +122,7 @@ func (resource Resource) DeleteFn(name string) {
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(resource.Kind, name, buf.String())
+		ErrorHandler(response.Request, resource.Kind, name, buf.String())
 		return
 	}
 

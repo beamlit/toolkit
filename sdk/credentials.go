@@ -57,6 +57,18 @@ func CurrentContext() ContextConfig {
 
 func SetCurrentWorkspace(workspaceName string, environment string) {
 	config := loadConfig()
+	// Check if workspace exists
+	found := false
+	for _, workspace := range config.Workspaces {
+		if workspace.Name == workspaceName {
+			found = true
+			break
+		}
+	}
+	if !found {
+		fmt.Printf("Workspace %s not found\n", workspaceName)
+		os.Exit(1)
+	}
 	config.Context.Workspace = workspaceName
 	config.Context.Environment = environment
 	saveConfig(config)

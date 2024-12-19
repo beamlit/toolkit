@@ -61,9 +61,7 @@ class BearerToken(Auth):
             return Exception("Invalid JWT token format")
 
         try:
-            claims_bytes = base64.urlsafe_b64decode(
-                parts[1] + "=" * (-len(parts[1]) % 4)
-            )
+            claims_bytes = base64.urlsafe_b64decode(parts[1] + "=" * (-len(parts[1]) % 4))
             claims = json.loads(claims_bytes)
         except Exception as e:
             return Exception(f"Failed to decode/parse JWT claims: {str(e)}")
@@ -80,9 +78,7 @@ class BearerToken(Auth):
         if err:
             return err
 
-        request.headers["X-Beamlit-Authorization"] = (
-            f"Bearer {self.credentials.access_token}"
-        )
+        request.headers["X-Beamlit-Authorization"] = f"Bearer {self.credentials.access_token}"
         request.headers["X-Beamlit-Workspace"] = self.workspace_name
         yield request
 
@@ -99,9 +95,7 @@ class BearerToken(Auth):
         }
 
         try:
-            response = post(
-                url, json=refresh_data, headers={"Content-Type": "application/json"}
-            )
+            response = post(url, json=refresh_data, headers={"Content-Type": "application/json"})
             response.raise_for_status()
             finalize_response = DeviceLoginFinalizeResponse(**response.json())
 

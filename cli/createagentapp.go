@@ -125,10 +125,10 @@ func getTheme() *huh.Theme {
 // retrieveModels fetches and returns a list of available model deployments from the API.
 // It filters the models to only include supported runtime types (openai, anthropic, mistral, etc.).
 // Returns an error if the API calls fail or if there are parsing issues.
-func retrieveModels() ([]sdk.ModelDeployment, error) {
-	var modelDeployments []sdk.ModelDeployment
+func retrieveModels() ([]sdk.Model, error) {
+	var modelDeployments []sdk.Model
 	ctx := context.Background()
-	res, err := client.ListModels(ctx)
+	res, err := client.ListModels(ctx, &sdk.ListModelsParams{})
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,10 @@ func retrieveModels() ([]sdk.ModelDeployment, error) {
 	}
 
 	for _, model := range models {
-		res, err := client.GetModelDeployment(ctx, *model.Name, "production")
+		environment := "production"
+		res, err := client.GetModel(ctx, *model.Metadata.Name, &sdk.GetModelParams{
+			Environment: &environment,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -153,16 +156,16 @@ func retrieveModels() ([]sdk.ModelDeployment, error) {
 		if err != nil {
 			return nil, err
 		}
-		var modelDeployment sdk.ModelDeployment
-		err = json.Unmarshal(body, &modelDeployment)
+		var model sdk.Model
+		err = json.Unmarshal(body, &model)
 		if err != nil {
 			return nil, err
 		}
-		if modelDeployment.Runtime != nil {
-			runtimeType := *modelDeployment.Runtime.Type
+		if model.Spec.Runtime != nil {
+			runtimeType := *model.Spec.Runtime.Type
 			supportedRuntimes := []string{"openai", "anthropic", "mistral", "cohere", "xai", "vertex", "bedrock"}
 			if slices.Contains(supportedRuntimes, runtimeType) {
-				modelDeployments = append(modelDeployments, modelDeployment)
+				modelDeployments = append(modelDeployments, model)
 			}
 		}
 	}
@@ -315,7 +318,7 @@ func promptTemplateConfig(agentAppOptions *CreateAgentAppOptions) {
 					}
 					options := []huh.Option[string]{}
 					for _, model := range models {
-						options = append(options, huh.NewOption(*model.Model, *model.Model))
+						options = append(options, huh.NewOption(*model.Metadata.Name, *model.Metadata.Name))
 					}
 					return options
 				}, &agentAppOptions).

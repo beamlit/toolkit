@@ -10,10 +10,11 @@ from ...types import Response
 
 def _get_kwargs(
     connection_name: str,
+    model_id: str,
 ) -> dict[str, Any]:
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": f"/integrations/connections/{connection_name}/models/*modelId",
+        "url": f"/integrations/connections/{connection_name}/models/{model_id}",
     }
 
     return _kwargs
@@ -39,6 +40,7 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 
 def sync_detailed(
     connection_name: str,
+    model_id: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Any]:
@@ -48,6 +50,7 @@ def sync_detailed(
 
     Args:
         connection_name (str):
+        model_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -59,6 +62,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         connection_name=connection_name,
+        model_id=model_id,
     )
 
     response = client.get_httpx_client().request(
@@ -70,6 +74,7 @@ def sync_detailed(
 
 async def asyncio_detailed(
     connection_name: str,
+    model_id: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Any]:
@@ -79,6 +84,7 @@ async def asyncio_detailed(
 
     Args:
         connection_name (str):
+        model_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -90,6 +96,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         connection_name=connection_name,
+        model_id=model_id,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)

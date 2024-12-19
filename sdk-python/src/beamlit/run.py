@@ -2,7 +2,6 @@ import urllib.parse
 from typing import Any
 
 import requests
-
 from beamlit.client import AuthenticatedClient
 from beamlit.common.settings import get_settings
 

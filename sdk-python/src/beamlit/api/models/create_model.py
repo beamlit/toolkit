@@ -6,13 +6,12 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.model import Model
-from ...models.model_with_deployments import ModelWithDeployments
 from ...types import Response
 
 
 def _get_kwargs(
     *,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
@@ -53,15 +52,15 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Response[Model]:
     """Create model
 
      Creates a model.
 
     Args:
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -85,15 +84,15 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Optional[Model]:
     """Create model
 
      Creates a model.
 
     Args:
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -112,15 +111,15 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Response[Model]:
     """Create model
 
      Creates a model.
 
     Args:
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -142,15 +141,15 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    body: ModelWithDeployments,
+    body: Model,
 ) -> Optional[Model]:
     """Create model
 
      Creates a model.
 
     Args:
-        body (ModelWithDeployments): Logical object representing a model but with deployment
-            definition inside
+        body (Model): Logical object representing a model, that can be instantiated in multiple
+            environments as model deployments
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

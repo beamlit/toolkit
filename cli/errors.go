@@ -3,6 +3,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -12,7 +13,7 @@ type ErrorModel struct {
 	Stack []string `json:"stack"`
 }
 
-func ErrorHandler(kind string, name string, body string) {
+func ErrorHandler(request *http.Request, kind string, name string, body string) {
 	var error ErrorModel
 	if err := json.Unmarshal([]byte(body), &error); err != nil {
 		fmt.Println(err)
@@ -20,7 +21,21 @@ func ErrorHandler(kind string, name string, body string) {
 	}
 
 	// Afficher l'erreur et le code
-	fmt.Printf("Resource %s:%s: %s (Code: %d)\n", kind, name, error.Error, error.Code)
+
+	workspace := request.Header.Get("X-Beamlit-Workspace")
+	if workspace != "" {
+		if error.Code == 401 {
+			resourceFullName := fmt.Sprintf("%s:%s", kind, name)
+			if name == "" {
+				resourceFullName = kind
+			}
+			fmt.Printf("You are not authorized to access the resource %s on workspace %s. Please login again.\n", resourceFullName, workspace)
+		} else {
+			fmt.Printf("Resource %s:%s:%s: %s (Code: %d)\n", kind, workspace, name, error.Error, error.Code)
+		}
+	} else {
+		fmt.Printf("Resource %s:%s: %s (Code: %d)\n", kind, name, error.Error, error.Code)
+	}
 
 	// Afficher le stack trace seulement s'il existe
 	if verbose && len(error.Stack) > 0 {

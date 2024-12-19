@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -17,20 +17,18 @@ class ResourceEnvironmentMetricsInferencePerSecondPerRegion:
     """Historical requests per second (RPS) per location, for the model deployment
 
     Attributes:
-        region (Union[Unset, List['Metric']]): Array of metrics
+        region (Union[Unset, list['Metric']]): Array of metrics
     """
 
-    region: Union[Unset, List["Metric"]] = UNSET
+    region: Union[Unset, list["Metric"]] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        region: Union[Unset, List[Dict[str, Any]]] = UNSET
+        region: Union[Unset, list[dict[str, Any]]] = UNSET
         if not isinstance(self.region, Unset):
             region = []
             for componentsschemas_array_metric_item_data in self.region:
-                componentsschemas_array_metric_item = (
-                    componentsschemas_array_metric_item_data.to_dict()
-                )
+                componentsschemas_array_metric_item = componentsschemas_array_metric_item_data.to_dict()
                 region.append(componentsschemas_array_metric_item)
 
         field_dict: dict[str, Any] = {}
@@ -42,16 +40,16 @@ class ResourceEnvironmentMetricsInferencePerSecondPerRegion:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
         from ..models.metric import Metric
 
+        if not src_dict:
+            return None
         d = src_dict.copy()
         region = []
         _region = d.pop("region", UNSET)
         for componentsschemas_array_metric_item_data in _region or []:
-            componentsschemas_array_metric_item = Metric.from_dict(
-                componentsschemas_array_metric_item_data
-            )
+            componentsschemas_array_metric_item = Metric.from_dict(componentsschemas_array_metric_item_data)
 
             region.append(componentsschemas_array_metric_item)
 

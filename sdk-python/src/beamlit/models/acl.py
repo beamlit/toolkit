@@ -14,9 +14,7 @@ class ACL:
 
     Attributes:
         created_at (Union[Unset, str]): The date and time when the resource was created
-        created_by (Union[Unset, str]): The user or service account who created the resource
         updated_at (Union[Unset, str]): The date and time when the resource was updated
-        updated_by (Union[Unset, str]): The user or service account who updated the resource
         id (Union[Unset, str]): ACL id
         resource_id (Union[Unset, str]): Resource ID
         resource_type (Union[Unset, str]): Resource type
@@ -27,9 +25,7 @@ class ACL:
     """
 
     created_at: Union[Unset, str] = UNSET
-    created_by: Union[Unset, str] = UNSET
     updated_at: Union[Unset, str] = UNSET
-    updated_by: Union[Unset, str] = UNSET
     id: Union[Unset, str] = UNSET
     resource_id: Union[Unset, str] = UNSET
     resource_type: Union[Unset, str] = UNSET
@@ -42,11 +38,7 @@ class ACL:
     def to_dict(self) -> dict[str, Any]:
         created_at = self.created_at
 
-        created_by = self.created_by
-
         updated_at = self.updated_at
-
-        updated_by = self.updated_by
 
         id = self.id
 
@@ -66,13 +58,9 @@ class ACL:
         field_dict.update(self.additional_properties)
         field_dict.update({})
         if created_at is not UNSET:
-            field_dict["created_at"] = created_at
-        if created_by is not UNSET:
-            field_dict["created_by"] = created_by
+            field_dict["createdAt"] = created_at
         if updated_at is not UNSET:
-            field_dict["updated_at"] = updated_at
-        if updated_by is not UNSET:
-            field_dict["updated_by"] = updated_by
+            field_dict["updatedAt"] = updated_at
         if id is not UNSET:
             field_dict["id"] = id
         if resource_id is not UNSET:
@@ -95,13 +83,9 @@ class ACL:
         if not src_dict:
             return None
         d = src_dict.copy()
-        created_at = d.pop("created_at", UNSET)
+        created_at = d.pop("createdAt", UNSET)
 
-        created_by = d.pop("created_by", UNSET)
-
-        updated_at = d.pop("updated_at", UNSET)
-
-        updated_by = d.pop("updated_by", UNSET)
+        updated_at = d.pop("updatedAt", UNSET)
 
         id = d.pop("id", UNSET)
 
@@ -119,9 +103,7 @@ class ACL:
 
         acl = cls(
             created_at=created_at,
-            created_by=created_by,
             updated_at=updated_at,
-            updated_by=updated_by,
             id=id,
             resource_id=resource_id,
             resource_type=resource_type,

@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -10,11 +10,11 @@ T = TypeVar("T", bound="SpecConfiguration")
 
 @_attrs_define
 class SpecConfiguration:
-    """Agent configuration, this is a key value storage. In your agent you can retrieve the value with config[key]
+    """Configuration, this is a key value storage. In your object you can retrieve the value with config[key]
 
     Attributes:
-        secret (Union[Unset, bool]): Agent configuration secret
-        value (Union[Unset, str]): Agent configuration value
+        secret (Union[Unset, bool]): ACconfiguration secret
+        value (Union[Unset, str]): Configuration value
     """
 
     secret: Union[Unset, bool] = UNSET
@@ -37,7 +37,9 @@ class SpecConfiguration:
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         secret = d.pop("secret", UNSET)
 

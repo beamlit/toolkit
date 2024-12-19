@@ -24,12 +24,15 @@ func (r *Operations) GetCmd() *cobra.Command {
 			Aliases: []string{resource.Singular, resource.Short},
 			Short:   fmt.Sprintf("Get a %s", resource.Kind),
 			Run: func(cmd *cobra.Command, args []string) {
+				options := map[string]string{
+					"environment": environment,
+				}
 				if len(args) == 0 {
-					resource.ListFn()
+					resource.ListFn(options)
 					return
 				}
 				if len(args) == 1 {
-					resource.GetFn(args[0])
+					resource.GetFn(args[0], options)
 				}
 			},
 		}
@@ -39,7 +42,7 @@ func (r *Operations) GetCmd() *cobra.Command {
 	return cmd
 }
 
-func (resource Resource) GetFn(name string) {
+func (resource Resource) GetFn(name string, options map[string]string) {
 	ctx := context.Background()
 	formattedError := fmt.Sprintf("Resource %s:%s error: ", resource.Kind, name)
 	// Use reflect to call the function
@@ -50,6 +53,11 @@ func (resource Resource) GetFn(name string) {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx), reflect.ValueOf(name)} // Add the context and the resource name
+
+	if resource.GetParamsType != nil {
+		paramsValue := retrieveListParams(resource.GetParamsType, options)
+		fnargs = append(fnargs, paramsValue)
+	}
 
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
@@ -79,7 +87,7 @@ func (resource Resource) GetFn(name string) {
 	}
 
 	if response.StatusCode >= 400 {
-		ErrorHandler(resource.Kind, name, buf.String())
+		ErrorHandler(response.Request, resource.Kind, name, buf.String())
 		os.Exit(1)
 	}
 
@@ -92,7 +100,7 @@ func (resource Resource) GetFn(name string) {
 	output(resource, []interface{}{res}, outputFormat)
 }
 
-func (resource Resource) ListFn() {
+func (resource Resource) ListFn(options map[string]string) {
 	formattedError := fmt.Sprintf("Resource %s error: ", resource.Kind)
 	ctx := context.Background()
 	// Use reflect to call the function
@@ -103,6 +111,13 @@ func (resource Resource) ListFn() {
 	}
 	// Create a slice for the arguments
 	fnargs := []reflect.Value{reflect.ValueOf(ctx)} // Add the context
+
+	// Handle the options if the resource has ListParamsType
+	if resource.ListParamsType != nil {
+		paramsValue := retrieveListParams(resource.ListParamsType, options)
+		fnargs = append(fnargs, paramsValue)
+	}
+
 	// Call the function with the arguments
 	results := funcValue.Call(fnargs)
 	// Handle the results based on your needs
@@ -127,7 +142,7 @@ func (resource Resource) ListFn() {
 		os.Exit(1)
 	}
 	if response.StatusCode >= 400 {
-		ErrorHandler(resource.Kind, "", buf.String())
+		ErrorHandler(response.Request, resource.Kind, "", buf.String())
 		os.Exit(1)
 	}
 

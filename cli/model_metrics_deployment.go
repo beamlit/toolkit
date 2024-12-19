@@ -31,7 +31,9 @@ func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			res, err := client.GetModelDeploymentMetrics(ctx, args[0], environment)
+			res, err := client.GetModelMetrics(ctx, args[0], &sdk.GetModelMetricsParams{
+				Environment: &environment,
+			})
 			if err != nil {
 				panic(err)
 			}
@@ -41,7 +43,7 @@ func (r *Operations) MetricsModelDeploymentCmd() *cobra.Command {
 				panic(err)
 			}
 
-			var metric sdk.ModelDeploymentMetrics
+			var metric sdk.ResourceMetrics
 			err = json.Unmarshal(body, &metric)
 			if err != nil {
 				panic(err)

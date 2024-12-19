@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -21,7 +21,7 @@ class AgentHistoryEvent:
         status (Union[Unset, str]): Status, eg: running, success, failed
         sub_function (Union[Unset, str]): Function used in kit if a kit was used
         took (Union[Unset, int]): Number of milliseconds it took to complete the event
-        type (Union[Unset, str]): Type, one of function or agent
+        type_ (Union[Unset, str]): Type, one of function or agent
     """
 
     end: Union[Unset, str] = UNSET
@@ -32,7 +32,7 @@ class AgentHistoryEvent:
     status: Union[Unset, str] = UNSET
     sub_function: Union[Unset, str] = UNSET
     took: Union[Unset, int] = UNSET
-    type: Union[Unset, str] = UNSET
+    type_: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -52,7 +52,7 @@ class AgentHistoryEvent:
 
         took = self.took
 
-        type = self.type
+        type_ = self.type_
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -73,13 +73,15 @@ class AgentHistoryEvent:
             field_dict["sub_function"] = sub_function
         if took is not UNSET:
             field_dict["took"] = took
-        if type is not UNSET:
-            field_dict["type"] = type
+        if type_ is not UNSET:
+            field_dict["type"] = type_
 
         return field_dict
 
     @classmethod
-    def from_dict(cls: Type[T], src_dict: dict[str, Any]) -> T:
+    def from_dict(cls: type[T], src_dict: dict[str, Any]) -> T:
+        if not src_dict:
+            return None
         d = src_dict.copy()
         end = d.pop("end", UNSET)
 
@@ -97,7 +99,7 @@ class AgentHistoryEvent:
 
         took = d.pop("took", UNSET)
 
-        type = d.pop("type", UNSET)
+        type_ = d.pop("type", UNSET)
 
         agent_history_event = cls(
             end=end,
@@ -108,7 +110,7 @@ class AgentHistoryEvent:
             status=status,
             sub_function=sub_function,
             took=took,
-            type=type,
+            type_=type_,
         )
 
         agent_history_event.additional_properties = d
