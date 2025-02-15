@@ -52,7 +52,7 @@ export class ClientCredentials {
   }
 
   async fetchWithTimeoutAndRetry(url: string, options: RequestInit, timeout: number, level=0): Promise<Response> {
-    if(level > 10) {
+    if(level > 50) {
       throw new Error("Failed to fetch with timeout and retry after 10 retries")
     }
     console.warn("Fetching with timeout and retry", url, options, timeout, level)
@@ -109,7 +109,7 @@ export class ClientCredentials {
             Authorization: `Basic ${this.credentials.client_credentials}`,
           },
           body: JSON.stringify(body),
-        },10000);
+        },1000);
         const data = (await response.json()) as DeviceLoginFinalizeResponse;
         this.credentials.access_token = data.access_token;
         this.credentials.refresh_token = data.refresh_token;
