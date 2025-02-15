@@ -1,4 +1,3 @@
-import { saveCredentials } from "./credentials.js";
 import { Credentials } from "./types.js";
 
 interface DeviceLoginFinalizeResponse {
@@ -65,7 +64,8 @@ export class ClientCredentials {
       });
       clearTimeout(timeoutId);
       return response;
-    } catch (e) {
+    } catch (e:any) {
+      console.error("Fetch error", e, e.name, e.stack)
       if (e instanceof DOMException && e.name === 'AbortError') {
         return this.fetchWithTimeoutAndRetry(url, options, timeout, level+1)
       }
@@ -122,20 +122,6 @@ export class ClientCredentials {
       throw new Error("Invalid JWT token format");
     }
 
-    try {
-      const claimsBytes = Buffer.from(parts[1], "base64url");
-      const claims = JSON.parse(claimsBytes.toString());
-      const expTime = new Date(claims.exp * 1000);
-      const currentTime = new Date();
-
-      // Refresh if token expires in less than 10 minutes
-      if (currentTime.getTime() + 10 * 60 * 1000 > expTime.getTime()) {
-        return await this.doRefresh();
-      }
-    } catch (e) {
-      throw new Error(`Failed to decode/parse JWT claims: ${e}`);
-    }
-
     return null;
   }
 
@@ -157,51 +143,4 @@ export class ClientCredentials {
     req.headers.set("X-Beamlit-Workspace", this.workspace_name);
   }
 
-  /**
-   * Performs the token refresh by requesting new access and refresh tokens.
-   * @returns A promise resolving to null.
-   * @throws If the refresh process fails.
-   */
-  private async doRefresh(): Promise<null> {
-    if (!this.credentials.refresh_token) {
-      throw new Error("No refresh token to refresh");
-    }
-
-    const url = `${this.base_url}/oauth/token`;
-    const refresh_data = {
-      grant_type: "refresh_token",
-      refresh_token: this.credentials.refresh_token,
-      device_code: this.credentials.device_code,
-      client_id: "beamlit",
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(refresh_data),
-      });
-
-      const finalize_response =
-        (await response.json()) as DeviceLoginFinalizeResponse;
-
-      if (!finalize_response.refresh_token) {
-        finalize_response.refresh_token = this.credentials.refresh_token;
-      }
-
-      const creds: Credentials = {
-        access_token: finalize_response.access_token,
-        refresh_token: finalize_response.refresh_token,
-        expires_in: finalize_response.expires_in,
-        device_code: this.credentials.device_code,
-        client_credentials: this.credentials.client_credentials,
-      };
-
-      this.credentials = creds;
-      saveCredentials(this.workspace_name, creds);
-      return null;
-    } catch (e) {
-      throw new Error(`Failed to refresh token: ${e}`);
-    }
-  }
 }
