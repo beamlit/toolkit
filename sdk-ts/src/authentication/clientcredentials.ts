@@ -55,7 +55,9 @@ export class ClientCredentials {
     if(level > 10) {
       throw new Error("Failed to fetch with timeout and retry after 10 retries")
     }
+    console.warn("Fetching with timeout and retry", url, options, timeout, level)
     try {
+      const start = Date.now()
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeout);
       const response = await fetch(url, {
@@ -63,6 +65,7 @@ export class ClientCredentials {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
+      console.warn("Fetch with timeout and retry", url, options, timeout, level, Date.now() - start)
       return response;
     } catch (e:any) {
       console.error("Fetch error", e, e.name, e.stack)
@@ -106,7 +109,7 @@ export class ClientCredentials {
             Authorization: `Basic ${this.credentials.client_credentials}`,
           },
           body: JSON.stringify(body),
-        },1000);
+        },10000);
         const data = (await response.json()) as DeviceLoginFinalizeResponse;
         this.credentials.access_token = data.access_token;
         this.credentials.refresh_token = data.refresh_token;
