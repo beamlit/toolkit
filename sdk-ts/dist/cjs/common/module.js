@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.importModule = importModule;
+const settings_js_1 = require("./settings.js");
+/**
+ * Imports and returns a module based on the current settings.
+ * @param module - The module path to import. If null, uses the setting's module path.
+ * @returns The imported module or function.
+ */
+function importModule(module = null) {
+    const settings = (0, settings_js_1.getSettings)();
+    module = module || settings.server.module.replaceAll(".", "/");
+    const toRequire = process.cwd() + "/" + module.split("/").slice(0, -1).join("/");
+    const main_module = require(toRequire); // eslint-disable-line
+    const func = main_module[settings.server.module.split(".").slice(-1)[0]];
+    if (func)
+        return func;
+    return main_module.default;
+}

@@ -1,6 +1,6 @@
 definition.yml
-dist
-dist/
+/dist
+
 /beamlit
 .DS_Store
 .venv
